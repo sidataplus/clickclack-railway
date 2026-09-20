@@ -53,6 +53,6 @@ ENV CLICKCLACK_DATA=/app/data \
 # to UID/GID 10001 before provisioning accounts or starting the Go server.
 USER root
 EXPOSE 8080
-VOLUME ["/app/data"]
+# Persistent storage is attached by Railway at /app/data, not declared here.
 ENTRYPOINT ["/usr/local/bin/cc-entrypoint"]
 CMD ["serve"]
