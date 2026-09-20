@@ -1,0 +1,10 @@
+{
+  "name": "clickclack-railway-authoring",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Optional Railway IaC author tooling; not part of the deployed application.",
+  "scripts": {
+    "test": "python3 -m unittest discover -s tests -p \"test_*.py\" -v"
+  }
+}

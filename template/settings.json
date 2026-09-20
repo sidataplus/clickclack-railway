@@ -1,0 +1,74 @@
+{
+  "_format": "Human/maintainer checklist, NOT a Railway import schema. Apply in the template composer.",
+  "name": "ClickClack",
+  "category": "Bots",
+  "description": "Self-hosted chat for humans and AI agents. SQLite, persistent uploads, and password-first setup.",
+  "provenance": "Independent community template; upstream application source is pinned and unmodified.",
+  "service": {
+    "name": "ClickClack",
+    "source": "sidataplus/clickclack-railway",
+    "branch": "main",
+    "builder": "Dockerfile",
+    "dockerfile": "Dockerfile",
+    "startCommand": "Use image ENTRYPOINT and CMD; no override",
+    "preDeployCommand": null,
+    "replicas": 1,
+    "serverless": false,
+    "publicNetworking": {
+      "type": "HTTP",
+      "targetPort": 8080,
+      "generateRailwayDomain": true
+    },
+    "healthcheck": {
+      "path": "/readyz",
+      "timeoutSeconds": 120
+    },
+    "volume": {
+      "mountPath": "/app/data",
+      "initialSizeMB": 1024
+    },
+    "restartPolicy": "On failure; use a bounded retry count"
+  },
+  "variables": {
+    "CC_BOOTSTRAP_EMAIL": {
+      "required": true,
+      "default": null,
+      "description": "First administrator email. No email is sent."
+    },
+    "CC_BOOTSTRAP_NAME": {
+      "required": false,
+      "default": "Admin"
+    },
+    "CC_BOOTSTRAP_PASSWORD": {
+      "required": true,
+      "templateDefault": "${{secret(32, \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\")}}",
+      "description": "Generated initial password. Retrieve from service Variables; change after first login."
+    },
+    "CC_BOOTSTRAP_MODE": {
+      "default": "sqlite"
+    },
+    "CLICKCLACK_DATA": {
+      "default": "/app/data"
+    },
+    "CLICKCLACK_PASSWORD_AUTH_ENABLED": {
+      "default": "true"
+    },
+    "CLICKCLACK_DEV_BOOTSTRAP": {
+      "default": "false"
+    },
+    "CLICKCLACK_METRICS_ENABLED": {
+      "default": "false"
+    },
+    "PORT": {
+      "default": "8080"
+    }
+  },
+  "prepublicationChecks": [
+    "Confirm the source repository is public before Marketplace publication.",
+    "Replace copied author email with required empty input.",
+    "Replace copied author password with the secret generator, not its evaluated value.",
+    "Remove author-specific IDs, callback URLs, credentials, and optional provider settings.",
+    "Deploy a fresh copy of the draft and pass docs/ACCEPTANCE.md.",
+    "Publish only after live validation; obtain the real template ID from Railway."
+  ]
+}

@@ -6,6 +6,16 @@ on:
 permissions:
   contents: read
 jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Runtime and package tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Python and shell syntax
+        run: |
+          python3 -m py_compile runtime/cc_runtime.py scripts/author.py tests/smoke_container.py
+          sh -n runtime/cc-entrypoint runtime/cc-admin scripts/create-template.sh scripts/publish-template.sh
   real-image:
     runs-on: ubuntu-latest
     timeout-minutes: 45

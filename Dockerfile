@@ -3,8 +3,7 @@ FROM alpine:3.24@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec4
 RUN apk add --no-cache ca-certificates git
 WORKDIR /src
 ARG CLICKCLACK_UPSTREAM_REF=05eca831b9ef0ae1924c08b3c81c860d784b6ba3
-RUN test "${#CLICKCLACK_UPSTREAM_REF}" -eq 40 \
- && printf '%s' "$CLICKCLACK_UPSTREAM_REF" | grep -Eq '^[a-f0-9]{40}$' \
+RUN printf '%s' "$CLICKCLACK_UPSTREAM_REF" | grep -Eq '^[a-f0-9]{40}$' \
  && git init \
  && git remote add origin https://github.com/openclaw/clickclack.git \
  && git fetch --depth 1 origin "$CLICKCLACK_UPSTREAM_REF" \
@@ -40,7 +39,8 @@ WORKDIR /app
 COPY --from=api /out/clickclack /usr/local/bin/clickclack
 COPY --from=source /src/LICENSE /usr/share/licenses/clickclack/LICENSE
 COPY runtime/cc_runtime.py /opt/clickclack-railway/cc_runtime.py
-COPY --chmod=755 runtime/cc-entrypoint runtime/cc-admin /usr/local/bin/
+COPY runtime/cc-entrypoint runtime/cc-admin /usr/local/bin/
+RUN chmod 0755 /usr/local/bin/cc-entrypoint /usr/local/bin/cc-admin
 COPY LICENSE NOTICE.md /usr/share/licenses/clickclack-railway/
 ENV CLICKCLACK_DATA=/app/data \
     CLICKCLACK_PASSWORD_AUTH_ENABLED=true \
