@@ -1,0 +1,17 @@
+name: Validate template
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build pinned upstream plus deployment adapter
+        run: docker build --progress=plain -t clickclack-railway:test .
+      - name: Real application integration checks
+        run: python3 tests/smoke_container.py --image clickclack-railway:test
